@@ -58,7 +58,7 @@
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
     <script type="text/javascript">
            FHIR.oauth2.ready().then(function(client) {
-                console.log(client.tokenResponse.access_token)
+                console.log(client);
                 // Render the current patient (or any error)
                 client.patient.read().then(
                     function(pt) {
