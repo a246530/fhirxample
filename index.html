@@ -82,7 +82,7 @@
         iss: "https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC04ODg4ODA0In0/fhir"
       })
       .then(function(client) {
-        
+        console.log(client.patient.id);
         // Get MedicationRequests for the selected patient
         client.request("/MedicationRequest?patient=" + client.patient.id, {
           resolveReferences: [ "medicationReference" ],
