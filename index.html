@@ -57,43 +57,57 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
     <script type="text/javascript">
-           FHIR.oauth2.ready().then(function(client) {
-                console.log(client);
-                // Render the current patient (or any error)
-                client.patient.read().then(
-                    function(pt) {
-                        document.getElementById("patient").innerText = JSON.stringify(pt, null, 4);
-                    },
-                    function(error) {
-                        document.getElementById("patient").innerText = error.stack;
-                    }
-                );
-                
-                // Get MedicationRequests for the selected patient
-                client.request("/MedicationRequest?patient=" + client.patient.id, {
-                    resolveReferences: [ "medicationReference" ],
-                    graph: true
-                })
-                
-                // Reject if no MedicationRequests are found
-                .then(function(data) {
-                    if (!data.entry || !data.entry.length) {
-                        throw new Error("No medications found for the selected patient");
-                    }
-                    return data.entry;
-                })
-                
 
-                // Render the current patient's medications (or any error)
-                .then(
-                    function(meds) {
-                        document.getElementById("meds").innerText = JSON.stringify(meds, null, 4);
-                    },
-                    function(error) {
-                        document.getElementById("meds").innerText = error.stack;
-                    }
-                );
+      function getMedicationName(medCodings) {
+        var coding = medCodings.find(function(c){
+          return c.system == "http://www.nlm.nih.gov/research/umls/rxnorm";
+        });
+        return coding && coding.display || "Unnamed Medication(TM)";
+      }
 
-            }).catch(console.error);
+      FHIR.oauth2.init({
+        // The client_id that you should have obtained after registering a client at the EHR.
+        clientId: "my_web_app",
+
+        // The scopes that you request from the EHR
+        scope: [
+          "launch/patient",  // request the current patient
+          "openid fhirUser",  // Get the current user
+          "online_access",   // request a refresh token
+          "patient/*.read",  // read patient data
+        ].join(" "),
+
+        redirectUri: "./index.html",
+
+        iss: "https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC04ODg4ODA0In0/fhir"
+      })
+      .then(function(client) {
+        
+        // Get MedicationRequests for the selected patient
+        client.request("/MedicationRequest?patient=" + client.patient.id, {
+          resolveReferences: [ "medicationReference" ],
+          graph: true
+        })
+          
+        // Reject if no MedicationRequests are found
+        .then(function(data) {
+          if (!data.entry || !data.entry.length) {
+            throw new Error("No medications found for the selected patient");
+          }
+          return data.entry;
+        })
+        
+        // Build an array of medication names
+        .then(function(entries) {
+          return entries.map(function(item) {
+            return getMedicationName(
+              client.getPath(item, "resource.medicationCodeableConcept.coding") ||
+              client.getPath(item, "resource.medicationReference.code.coding")
+            );
+          });
+        })
+
+      })
+      
     </script>
 </body></html>
