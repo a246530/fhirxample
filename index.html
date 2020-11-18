@@ -67,7 +67,7 @@
           }
 
           getCurrentPatient = function() {
-            return this._client.patient.read();
+            return Promise.all([this._client.patient.read()]);
           }
 
          
