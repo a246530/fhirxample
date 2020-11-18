@@ -57,8 +57,7 @@
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
     <script type="text/javascript">
         FHIR.oauth2.ready().then(function(client) {
-                let t=client.request('Patient');
-                console.log(t);                  
+               var app = new App(client);           
             }).catch(console.log("Issue"));
     /*
         const client = FHIR.client("https://r4.smarthealthit.org");
