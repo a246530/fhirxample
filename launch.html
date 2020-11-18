@@ -13,10 +13,13 @@
 
                 // The client_id that you should have obtained after registering a client at
                 // the EHR.
-                clientId: "my_web_app",
+                clientId: "bd332156-9cde-43d1-a1e9-88c933324c52",
+
                 // The scopes that you request from the EHR
                 scope: [
-                    "launch",           // Get the launch context in EHR launch mode
+                     "launch",           // Get the launch context in EHR launch mode
+                    "launch/patient",   // Get the current patient in standalone launch mode
+                    "launch/encounter", // Get the current encounter in standalone launch mode
                     "openid fhirUser",  // Get the current user
                     "patient/*.read"    // Read patient data
                  ].join(" "),
