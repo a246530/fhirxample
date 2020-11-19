@@ -57,6 +57,9 @@
                {{ patients.name[0].given[0] }}
                {{ patients.name[0].family }}
          </div>
+           <div   v-if="conditions">
+                {{ conditions.resource.entry[0] }}
+         </div>
          <div v-else>Loading</div>
        </div>
 
@@ -99,6 +102,7 @@
              return {
                 patients : null
                 ,encounters : null
+                ,conditions : null
                 ,selectedPatient : null
                 ,loading: true
                 ,error: null
@@ -109,8 +113,8 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                var encounters = await smart.patient.request("Condition");
-               console.log(encounters);
+                this.conditions = await smart.patient.request("Condition");
+               
           },
            methods: {
              async onReady(client) {
