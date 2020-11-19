@@ -51,20 +51,11 @@
 
 
        <div id="patient">
-         <h3>Patient List</h3>
-         <div class="table-responsive"  v-if="patients">
-           <table class="table">
-             <tr>
-               <th>BirthDate</th>
-               <th>First Name</th>
-               <th>Last Name</th>
-             </tr>
-             <tr v-for="patient in patients.entry">
-               <td>{{ patient.resource.birthDate }}</td>
-               <td>{{ patient.resource.name[0].given[0] }}</td>
-               <td>{{ patient.resource.name[0].family }}</td>
-             </tr>
-           </table>
+         <h3>Patient Demo</h3>
+         <div   v-if="patients">
+                {{ patient.resource.birthDate }}
+               {{ patient.resource.name[0].given[0] }}
+               {{ patient.resource.name[0].family }}
          </div>
          <div v-else>Loading</div>
        </div>
@@ -104,7 +95,7 @@
               this._client = client;
           }
          async getCurrentPatient() {
-            console.log(await this._client.patient.read());
+           return await this._client.patient.read();
           }
         }
      
