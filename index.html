@@ -69,6 +69,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
    <script type="text/javascript">
+       const getSmartClient = () =>
+          new Promise((resolve, reject) => {
+            if (process.env.NODE_ENV === 'development') {
+              /* eslint-disable-next-line */
+            const smart = FHIR.client({
+
+                // === Cerner sandbox ===
+                // serviceUrl:
+                //   'https://fhir-open.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca',
+                // patientId: '1316024'
+
+                // === SMART on FHIR sandbox ===
+                serviceUrl: 'https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzAxIn0/fhir',
+                patientId: 'smart-1137192'
+              });
+
+              resolve(smart);
+            } else {
+              /* eslint-disable-next-line */
+            FHIR.oauth2.ready(function(smart, err) {
+                if (err) {
+                  reject(err);
+                }
+                resolve(smart);
+              });
+            }
+          });
+
         const fhirapp = {
            data() {
              return {
@@ -79,7 +107,8 @@
              }
            },
             async mounted() {
-               FHIR.oauth2.ready(client => client.request(`Patient/${client.patient.id}`));
+               const smart = await smartClient();
+                console.log(smart);
           },
            methods: {
              async onReady(client) {
