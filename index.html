@@ -72,16 +72,22 @@
          const fhirapp = {
            data() {
              return {
-               patients : null
-               ,selectedPatient : null
+                patients : null
+                ,selectedPatient : null
+                ,loading: true
+                ,error: null
              }
            },
-           async beforeCreate() {
-            this.patients=FHIR.oauth2.ready().then(function(client) {
-                var app = new App(client);  
-                return app.getCurrentPatient();
-                }).catch(console.log("Issue"));
-           },
+            async mounted() {
+            try {
+              const smart = await getSmartClient();
+              this.patients = await smart.patient.read();
+              this.loading = false;
+            } catch (resp) {
+              this.loading = false;
+              this.error = resp.error || resp;
+            }
+          },
            methods: {
              reverseMessage() {
               
@@ -100,16 +106,34 @@
         }
      
                
-       // Real-life example borrowed from the Growth Chart App
-       function fetchVitals(client) {
-           var query = new URLSearchParams();
-           query.set("patient", "8ea19aa4-f577-48f7-a913-a755f3f79797");
-           query.set("_count", 100); // Try this to fetch fewer pages
-           return client.request("Encounter?" + query, {
-               pageLimit: 0,   // get all pages
-               flat     : true // return flat array of Observation resources
-           })
-       }
+          const getSmartClient = () =>
+          new Promise((resolve, reject) => {
+            if (process.env.NODE_ENV === 'development') {
+              /* eslint-disable-next-line */
+            const smart = FHIR.client({
+
+                // === Cerner sandbox ===
+                // serviceUrl:
+                //   'https://fhir-open.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca',
+                // patientId: '1316024'
+
+                // === SMART on FHIR sandbox ===
+                serviceUrl: 'https://r2.smarthealthit.org',
+                patientId: 'smart-1137192'
+              });
+
+              resolve(smart);
+            } else {
+              /* eslint-disable-next-line */
+            FHIR.oauth2.ready(function(smart, err) {
+                if (err) {
+                  reject(err);
+                }
+                resolve(smart);
+              });
+            }
+          });
+
       
    </script>
 </body></html>
