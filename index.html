@@ -113,7 +113,7 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.conditions = await smart.patient.request("Condition", {
+                this.conditions = await smart.patient.request("Condition/f4298eb2-83ca-4c46-8b9c-d636a9984696", {
                     resolveReferences: ["encounter"]
                 });
                 console.log(this.conditions);
