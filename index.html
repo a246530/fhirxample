@@ -82,6 +82,8 @@
             try {
               const smart = await getSmartClient();
               this.patients = await smart.patient.read();
+                console.log(smart);
+                console.log(this.patients);
               this.loading = false;
             } catch (resp) {
               this.loading = false;
