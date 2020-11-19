@@ -109,8 +109,8 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                var conditions = await smart.patient.api.fetchAll({ type: 'Encounter' });
-               console.log(conditions);
+                var encounters = await smart.patient.request("Encounter");
+               console.log(encounters);
           },
            methods: {
              async onReady(client) {
