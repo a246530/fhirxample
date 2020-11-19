@@ -77,7 +77,7 @@
              }
            },
            async beforeCreate() {
-            FHIR.oauth2.ready().then(this.patients=function(client) {
+            this.patients=FHIR.oauth2.ready().then(function(client) {
                 var app = new App(client);  
                 return app.getCurrentPatient();
                 }).catch(console.log("Issue"));
