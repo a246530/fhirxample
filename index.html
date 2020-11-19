@@ -109,11 +109,11 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.encounters = await smart.patient.api.search({
+                 const encounters = await smart.patient.api.search({
                     type: 'Encounter'
                     ,query: { patient : this.patient.id }
                   });
-               console.log(this.encounters);
+               console.log(encounters);
           },
            methods: {
              async onReady(client) {
