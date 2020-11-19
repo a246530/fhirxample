@@ -79,7 +79,7 @@
              }
            },
             async mounted() {
-               FHIR.oauth2.ready(this.onReady(client), this.onError());
+               FHIR.oauth2.ready(this.patients => client.request(client.patient.read()));
           },
            methods: {
              async onReady(client) {
