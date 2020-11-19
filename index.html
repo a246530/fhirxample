@@ -110,12 +110,12 @@
            },
             async mounted() {
                const smart = await getSmartClient();
-                console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
                 this.conditions = await smart.patient.request("Condition");
+                this.encounters = await smart.patient.request("Encounter");
                 console.log(this.conditions);
-                console.log(this.conditions.entry[0]);
+                console.log(this.encounters);
                
           },
            methods: {
