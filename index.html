@@ -58,7 +58,7 @@
                {{ patients.name[0].family }}
          </div>
            <div   v-if="conditions">
-                {{ conditions.entry[0] }}
+                
          </div>
          <div v-else>Loading</div>
        </div>
@@ -112,7 +112,7 @@
                const smart = await getSmartClient();
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.conditions = await smart.patient.request("Condition");
+                this.conditions = await smart.patient.request("Observation");
                 this.encounters = await smart.patient.request("Encounter");
                 console.log(this.conditions);
                 console.log(this.encounters);
