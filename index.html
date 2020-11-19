@@ -116,6 +116,7 @@
                 this.conditions = await smart.patient.request("Condition", {
                     resolveReferences: ["encounter"]
                 });
+                console.log(this.conditions);
                
           },
            methods: {
