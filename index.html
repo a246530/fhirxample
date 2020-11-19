@@ -69,36 +69,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
    <script type="text/javascript">
-         const getSmartClient = () =>
-          new Promise((resolve, reject) => {
-            if (process.env.NODE_ENV === 'development') {
-              /* eslint-disable-next-line */
-            const smart = FHIR.client({
-
-                // === Cerner sandbox ===
-                // serviceUrl:
-                //   'https://fhir-open.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca',
-                // patientId: '1316024'
-
-                // === SMART on FHIR sandbox ===
-                serviceUrl: 'https://r2.smarthealthit.org',
-                patientId: 'smart-1137192'
-              });
-
-              resolve(smart);
-            } else {
-              /* eslint-disable-next-line */
-            FHIR.oauth2.ready(function(smart, err) {
-                if (err) {
-                  reject(err);
-                }
-                resolve(smart);
-              });
-            }
-          });
-
-
-         const fhirapp = {
+        const fhirapp = {
            data() {
              return {
                 patients : null
@@ -108,35 +79,14 @@
              }
            },
             async mounted() {
-            try {
-              const smart = await getSmartClient();
-              this.patients = await smart.patient.read();
-              this.loading = false;
-            } catch (resp) {
-              this.loading = false;
-              this.error = resp.error || resp;
-            }
+               FHIR.oauth2.ready(this.onReady, this.onError);
           },
            methods: {
-             reverseMessage() {
-              
+             onready(client) {
+                this.patients=client.patient.read();
              }
            }
          }
-       Vue.createApp(fhirapp).mount('#app');
-    
-       class App {
-          constructor(client){
-              this._client = client;
-          }
-         async getCurrentPatient() {
-           return await this._client.patient.read();
-          }
-        }
-     
-               
-         
-
-      
+       Vue.createApp(fhirapp).mount('#app'); 
    </script>
 </body></html>
