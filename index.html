@@ -53,9 +53,9 @@
        <div id="patient">
          <h3>Patient Demo</h3>
          <div   v-if="patients">
-                {{ patient.resource.birthDate }}
-               {{ patient.resource.name[0].given[0] }}
-               {{ patient.resource.name[0].family }}
+                {{ patient.birthDate }}
+               {{ patient.name[0].given[0] }}
+               {{ patient.name[0].family }}
          </div>
          <div v-else>Loading</div>
        </div>
