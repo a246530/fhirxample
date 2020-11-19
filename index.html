@@ -113,9 +113,9 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.encounters = await smart.patient.request("Encounter");
-                console.log(this.encounters);
-                console.log(this.encounters.entry[0]);
+                this.conditions = await smart.patient.request("condition");
+                console.log(this.conditions);
+                console.log(this.conditions.entry[0]);
                
           },
            methods: {
