@@ -82,7 +82,7 @@
                FHIR.oauth2.ready(this.onReady(), this.onError());
           },
            methods: {
-             async onready(client) {
+             async onReady(client) {
                 console.log(client);
                  this.patients=await client.patient.read();
              }
