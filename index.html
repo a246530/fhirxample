@@ -1,111 +1,124 @@
 <html lang="en"><head>
-     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Temp</title>
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
+    <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <title>Temp</title>
+   <!-- Bootstrap core CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+   <style>
+     .bd-placeholder-img {
+       font-size: 1.125rem;
+       text-anchor: middle;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+       user-select: none;
+     }
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
+     @media (min-width: 768px) {
+       .bd-placeholder-img-lg {
+         font-size: 3.5rem;
+       }
+     }
 
-    </style>
-    <!-- Custom styles for this template -->
-  </head>
-  <body class="bg-light">
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-      <a class="navbar-brand mr-auto mr-lg-0" href="#">FHIR</a>
-      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+   </style>
+   <!-- Custom styles for this template -->
+ </head>
+ <body class="bg-light">
+   <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+     <a class="navbar-brand mr-auto mr-lg-0" href="#">FHIR</a>
+     <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+       <span class="navbar-toggler-icon"></span>
+     </button>
 
-      <div class="navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">FHIR <span class="sr-only">(current)</span></a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
+     <div class="navbar-collapse" id="navbarsExampleDefault">
+       <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+           <a class="nav-link" href="#">FHIR <span class="sr-only">(current)</span></a>
+         </li>
+       </ul>
+       <form class="form-inline my-2 my-lg-0">
+         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+       </form>
+     </div>
+   </nav>
 
-    
+   
 
-    <main role="main" class="container" style="margin-top: 56px;>
-      <div id="patient">Loading...</div>
-      <div id="meds">Loading...</div>
-    </main>
-    
-    
+   <main role="main" class="container" style="margin-top: 56px;">
+     <div id="app">
+
+
+       <div id="patient">
+         <h3>Patient List</h3>
+         <div class="table-responsive"  v-if="patients">
+           <table class="table">
+             <tr>
+               <th>BirthDate</th>
+               <th>First Name</th>
+               <th>Last Name</th>
+             </tr>
+             <tr v-for="patient in patients.entry">
+               <td>{{ patient.resource.birthDate }}</td>
+               <td>{{ patient.resource.name[0].given[0] }}</td>
+               <td>{{ patient.resource.name[0].family }}</td>
+             </tr>
+           </table>
+         </div>
+         <div v-else>Loading</div>
+       </div>
+
+
+     </div>
+   </main>
+   
+   <script src="https://unpkg.com/vue@next"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://combinatronics.com/smart-on-fhir/client-js/master/dist/build/fhir-client.js"></script>
-    <script type="text/javascript">
-        FHIR.oauth2.ready().then(function(client) {
-               var app = new App(client);  
-               app.getCurrentPatient();
-            }).catch(console.log("Issue"));
-            
+   <script type="text/javascript">
+         const fhirapp = {
+           data() {
+             return {
+               patients : null
+               ,selectedPatient : null
+             }
+           },
+           async beforeCreate() {
+            FHIR.oauth2.ready().then(function(client) {
+                var app = new App(client);  
+                this.patients=app.getCurrentPatient();
+                }).catch(console.log("Issue"));
+           },
+           methods: {
+             reverseMessage() {
+              
+             }
+           }
+         }
+       Vue.createApp(fhirapp).mount('#app');
+    
        class App {
           constructor(client){
               this._client = client;
           }
-
          async getCurrentPatient() {
             console.log(await this._client.patient.read());
           }
-
-         
-
         }
-    /*
-        const client = FHIR.client("https://r4.smarthealthit.org");
-        client.request("Appointment").then(function(data) {
-                    if (!data.entry || !data.entry.length) {
-                        throw new Error("No Appointment Found");
-                    }
-                    length=data.entry.length;
-                    console.log(data);
-                    for (i=0;i<length;i++) {
-                        console.log(data.entry[i].resource.start +' '+data.entry[i].resources.status);
-                    }
-                }).catch(console.error);
-             
-                
-          client.request("Patient/d64b37f5-d3b5-4c25-abe8-23ebe8f5a04e").then(function(data) {
-                    console.log(data);
-                    return data;
-                }).catch(console.error);
      
-           fetchVitals(client).then(function(data){
-            console.log(data);
-            });
-                
-        // Real-life example borrowed from the Growth Chart App
-        function fetchVitals(client) {
-            var query = new URLSearchParams();
-            query.set("patient", "8ea19aa4-f577-48f7-a913-a755f3f79797");
-            query.set("_count", 100); // Try this to fetch fewer pages
-            return client.request("Encounter?" + query, {
-                pageLimit: 0,   // get all pages
-                flat     : true // return flat array of Observation resources
-            })
-        }
-       */
-    </script>
+               
+       // Real-life example borrowed from the Growth Chart App
+       function fetchVitals(client) {
+           var query = new URLSearchParams();
+           query.set("patient", "8ea19aa4-f577-48f7-a913-a755f3f79797");
+           query.set("_count", 100); // Try this to fetch fewer pages
+           return client.request("Encounter?" + query, {
+               pageLimit: 0,   // get all pages
+               flat     : true // return flat array of Observation resources
+           })
+       }
+      
+   </script>
 </body></html>
