@@ -17,7 +17,8 @@
 
                 // The scopes that you request from the EHR
                 scope: [
-                    "launch/patient",   // Get the current patient in standalone launch mode
+                     "launch",
+                   // "launch/patient",   // Get the current patient in standalone launch mode
                     "openid fhirUser",  // Get the current user
                     "patient/*.read"    // Read patient data
                  ].join(" "),
@@ -25,8 +26,8 @@
                 // Having this option means that it makes a standalone launch. This is to make
                 // this demo usable out of the box, but it can still to EHR launch if "iss" and
                 // "launch" url parameters are passed.
-                iss: "https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzAxIn0/fhir",
-
+                //iss: "https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzAxIn0/fhir",
+                 iss: "https://launch.smarthealthit.org/v/r3/sim/eyJhIjoiMSIsImciOiIxIn0/fhir",       
                 // Typically, if your redirectUri points to the root of the current directory
                 // (where the launchUri is), you can omit this option because the default
                 // value is ".". However, some servers (like this one) do not support directory
