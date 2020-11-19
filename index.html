@@ -113,7 +113,7 @@
                 console.log(smart);
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.encounters = await smart.patient.request("encounter");
+                this.encounters = await smart.patient.request("Encounter");
                 console.log(this.encounters);
                 console.log(this.encounters.entry[0]);
                
