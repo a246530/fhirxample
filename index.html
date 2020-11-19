@@ -106,6 +106,8 @@
             async mounted() {
                const smart = await getSmartClient();
                 console.log(smart);
+                this.patients=await client.patient.read();
+                console.log(this.patients);
           },
            methods: {
              async onReady(client) {
