@@ -111,7 +111,7 @@
                 console.log(this.patients);
                 this.encounters = await smart.patient.api.search({
                     type: 'Encounter'
-                    query: { patient : this.patient.id }
+                    ,query: { patient : this.patient.id }
                   });
                console.log(this.encounters);
           },
