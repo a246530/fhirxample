@@ -112,7 +112,7 @@
                const smart = await getSmartClient();
                 this.patients=await smart.patient.read();
                 console.log(this.patients);
-                this.conditions = await smart.patient.request("Procedure");
+                this.conditions = await smart.patient.request("Allergy");
                 this.encounters = await smart.patient.request("Encounter");
                 console.log(this.conditions);
                 console.log(this.encounters);
