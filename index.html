@@ -63,8 +63,9 @@
                 this.conditions = await this.makeSmartRequest(smart,"Condition");
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
-                    console.log(condition.resource);
-                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: condition.resource.encounter.reference.replace("Encounter/", "") });
+                    console.log(condition.resource.encounter.reference.replace("Encounter/", "") );
+                    let rid=condition.resource.encounter.reference.replace("Encounter/", "");
+                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: rid});
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
