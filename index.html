@@ -60,19 +60,19 @@
                     links:[
                     ]
                 };
-                this.conditions = await smart.patient.request("Condition");
+                this.conditions = this.makeSmartRequest(smart,"Condition");
                 this.conditions.entry.forEach(condition=>{
+                    console.log(condition.resource);
                     fdc.nodes.push({ id : condition.resource.code.text , group : 1});
                 });
                 this.encounters = await smart.patient.request("Encounter");
                 this.encounters.entry.forEach(encounter=>{
-                    fdc.nodes.push({ id : encounter.resource.type[0].text , group : 2});
+                    fdc.nodes.push({rid: encounter.resource.id , id : encounter.resource.type[0].text , group : 2});
                 });
           },
            methods: {
-             async onReady(client) {
-                console.log(client);
-                 this.patients=await client.patient.read();
+             async makeSmartRequest(client,resource) {
+                 return await smart.patient.request(resource);
              }
              ,async onError() {
                 console.log("There was a problem");
