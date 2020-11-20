@@ -58,9 +58,9 @@
                 //console.log(this.patients);
                 this.conditions = await smart.patient.request("Condition");
                 this.encounters = await smart.patient.request("Encounter");
-                console.log(this.conditions.entry[0]);
-                console.log(this.encounters.entry[0]);
-               
+                this.conditions.entry.forEach(condition=>{
+                    console.log(condition.code);
+                }
           },
            methods: {
              async onReady(client) {
