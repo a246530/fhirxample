@@ -74,8 +74,8 @@
            methods: {
              async makeSmartRequest(smart,resource) {
                  let fhirResource = await smart.patient.request(resource);
-                 console.log(fhirResource);
-                 
+                 //console.log(fhirResource);
+                 return fhirResource;
              }
              ,async onError() {
                 console.log("There was a problem");
