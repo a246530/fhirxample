@@ -62,13 +62,11 @@
                 };
                 this.conditions = await smart.patient.request("Condition");
                 this.conditions.entry.forEach(condition=>{
-                    console.log(condition.resource.code.text);
                     fdc.nodes.push({ id : condition.resource.code.text , group : 1});
                 });
                 this.encounters = await smart.patient.request("Encounter");
                 this.encounters.entry.forEach(encounter=>{
-                    console.log(encounter.resource);
-                    //fdc.nodes.push({ id : condition.resource.code.text , group : 1});
+                    fdc.nodes.push({ id : encounter.resource.type[0].text , group : 2});
                 });
           },
            methods: {
