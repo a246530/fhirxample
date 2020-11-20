@@ -60,7 +60,7 @@
                 this.encounters = await smart.patient.request("Encounter");
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.code);
-                }
+                });
           },
            methods: {
              async onReady(client) {
