@@ -60,7 +60,7 @@
                     links:[
                     ]
                 };
-                this.conditions = this.makeSmartRequest(smart,"Condition");
+                this.conditions = await this.makeSmartRequest(smart,"Condition");
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.resource);
                     fdc.nodes.push({ id : condition.resource.code.text , group : 1});
@@ -72,7 +72,9 @@
           },
            methods: {
              async makeSmartRequest(smart,resource) {
-                 return await smart.patient.request(resource);
+                 let fhirResource = await smart.patient.request(resource);
+                 console.log(fhirResource);
+                 
              }
              ,async onError() {
                 console.log("There was a problem");
