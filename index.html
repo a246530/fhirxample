@@ -64,14 +64,14 @@
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.resource);
-                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: condition.resource.encounter.reference.replace("Encounter/", ""); });
+                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: condition.resource.encounter.reference.replace("Encounter/", "") });
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
                     fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: encounter.resource.id});
                 });
                 console.log(  fdc.nodes.map((item,i)=>{
-                     if(item.rid === fdc.nodes[i].rid){
+                     if((item.rid === fdc.nodes[i].rid) && (item.group != fdc.nodes[i].group)){
                          //merging two objects
                        return Object.assign({},item,fdc.nodes[i])
                      }
