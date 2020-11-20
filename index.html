@@ -72,8 +72,9 @@
                     fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: encounter.resource.id});
                 });
                 console.log(  fdc.nodes.map((item,i)=>{
-                     if((item.rid === fdc.nodes[i].rid) && (item.group != fdc.nodes[i].group)){
+                     if((item.rid === fdc.nodes[i].rid) ){
                          //merging two objects
+                         console.log(match)
                        return Object.assign({},item,fdc.nodes[i])
                      }
                   }));
