@@ -64,13 +64,18 @@
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.resource);
-                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: condition.resource.encounter.reference });
+                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: condition.resource.encounter.reference.replace("Encounter/", ""); });
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
                     fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: encounter.resource.id});
                 });
-                
+                console.log(  fdc.nodes.map((item,i)=>{
+                     if(item.rid === fdc.nodes[i].rid){
+                         //merging two objects
+                       return Object.assign({},item,fdc.nodes[i])
+                     }
+                  }));
                 console.log(fdc);
           },
            methods: {
