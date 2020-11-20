@@ -71,7 +71,7 @@
                 });
           },
            methods: {
-             async makeSmartRequest(client,resource) {
+             async makeSmartRequest(smart,resource) {
                  return await smart.patient.request(resource);
              }
              ,async onError() {
