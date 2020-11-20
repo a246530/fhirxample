@@ -19,8 +19,6 @@
                {{ patients.name[0].given[0] }}
                {{ patients.name[0].family }}
          </div>
-           <div   v-if="conditions">
-         </div>
          <div v-else>Loading</div>
        </div>
      </div>
@@ -63,9 +61,7 @@
                     ],
                     links:[
                     ]
-                   )
-                    
-                }
+                };
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.resource.code.text);
                     fdc.nodes.push({ id : condition.resource.code.text , group : 1});
