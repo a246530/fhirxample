@@ -59,7 +59,7 @@
                 this.conditions = await smart.patient.request("Condition");
                 this.encounters = await smart.patient.request("Encounter");
                 this.conditions.entry.forEach(condition=>{
-                    console.log(condition);
+                    console.log(condition.resource.code.text);
                 });
           },
            methods: {
