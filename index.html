@@ -58,8 +58,17 @@
                 //console.log(this.patients);
                 this.conditions = await smart.patient.request("Condition");
                 this.encounters = await smart.patient.request("Encounter");
+                var fdc = {
+                    nodes:[
+                    ],
+                    links:[
+                    ]
+                   )
+                    
+                }
                 this.conditions.entry.forEach(condition=>{
                     console.log(condition.resource.code.text);
+                    fdc.nodes.push({ id : condition.resource.code.text , group : 1})
                 });
           },
            methods: {
