@@ -75,10 +75,7 @@
                     fdc.nodes.map((item,i)=>{
                        for(var c=0; c < fdc.nodes.length; c++) {
                             if((item.rid === fdc.nodes[c].rid) && (item.group != fdc.nodes[c].group) ){
-                                //merging two objects
-                                console.log("Match Found");
-                                console.log(fdc.nodes[c]);
-                                return Object.assign({},item,fdc.nodes[c])
+                                fdc.links.push({source:item.id , target:fdc.nodes[c].id , value: 1})
                             }
                      };
                   }));
