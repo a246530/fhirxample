@@ -79,7 +79,7 @@
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
                     let rid=condition.resource.encounter.reference.replace("Encounter/", "");
-                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: rid});
+                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: [rid]});
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
@@ -87,7 +87,6 @@
                     let idExistsIndex=null;
                     for(let c=0;c<fdc.nodes.length;c++){
                         if(fdc.nodes[c].id==encounter.resource.type[0].text){
-                            console.log("foundone");
                             idExist=true;
                             idExistsIndex=c;
                             break;
