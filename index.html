@@ -86,7 +86,7 @@
                     let idExist=false;
                     let idExistsIndex=null;
                     for(let c=0;c<fdc.nodes.length;c++){
-                        if(Object.values(fdc.nodes[c].indexOf(encounter.resource.type[0].text)>-1)){
+                        if(Object.values(fdc.nodes[c]).indexOf(encounter.resource.type[0].text)>-1){
                             ifExists=true;
                             idExistsIndex=c;
                             break;
