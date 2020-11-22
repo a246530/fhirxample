@@ -100,10 +100,9 @@
                     }
                 });
 
-                this.practitioners = await smart.request("Practitioner");// this.makeSmartRequest(smart,"Practitioner");  
+                this.practitioners = await smart.request("Practitioner?Patient="+smart.patient.id);// this.makeSmartRequest(smart,"Practitioner");  
                 console.log(this.practitioners);
                 this.practitioners.entry.forEach(practitioner=>{
-                    console.log(practitioner.resource.name);
                     let practitionerName=practitioner.resource.name[0].family+','+practitioner.resource.name[0].given[0];
                     let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
                     if(idExistsIndex>-1){
@@ -112,6 +111,10 @@
                         fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[practitioner.resource.id] });
                     }
                 });
+
+
+               
+
                 console.log(  
                     fdc.nodes.map((item,i)=>{
                        for(var c=0; c < fdc.nodes.length; c++) {
