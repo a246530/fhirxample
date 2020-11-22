@@ -79,7 +79,8 @@
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
                     let rid=condition.resource.encounter.reference.replace("Encounter/", "");
-                    if(this.getResourceIDIndex(fdc,condition.resource.code.text)>-1){
+                    let idExistsIndex = this.getResourceIDIndex(fdc,condition.resource.code.text)
+                    if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(rid);
                     }else{
                         fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: [rid]});
@@ -89,7 +90,8 @@
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
-                    if(this.getResourceIDIndex(fdc,encounter.resource.type[0].text)>-1){
+                    let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
+                    if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
                     }else{
                         fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id]});
