@@ -124,9 +124,9 @@
                     .attr("r", 5)
                     .attr("fill", function(d) { return color(d.group); })
                     .call(d3.drag()
-                        .on("start", this.dragstarted())
-                        .on("drag", this.dragged())
-                        .on("end", this.dragended()));
+                        .on("start", this.dragstarted(d3))
+                        .on("drag", this.dragged(d3))
+                        .on("end", this.dragended(d3)));
                 var lables = this.node.append("text")
                     .text(function(d) {
                         return d.id;
