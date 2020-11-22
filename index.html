@@ -91,7 +91,7 @@
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
                     let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
-                    let participantID=encounter.resource.participant[0].individual.reference("Practitioner/", "");
+                    let participantID=encounter.resource.participant[0].individual.reference.replace("Practitioner/", "");
                     if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
                         fdc.nodes[idExistsIndex].participantID.push(participantID);
