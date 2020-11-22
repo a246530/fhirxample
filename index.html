@@ -107,20 +107,19 @@
                     .force("charge", d3.forceManyBody())
                     .force("center", d3.forceCenter(width / 2, height / 2));
 
-                d3.json(JSON.stringify(fdc), function(error, graph) {
-                    if (error) throw error;
+                
 
                     var link = svg.append("g")
                         .attr("class", "links")
                         .selectAll("line")
-                        .data(graph.links)
+                        .data(fdc.links)
                         .enter().append("line")
                         .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
                     var node = svg.append("g")
                         .attr("class", "nodes")
                         .selectAll("g")
-                        .data(graph.nodes)
+                        .data(fdc.nodes)
                         .enter().append("g")
                         
                     var circles = node.append("circle")
@@ -142,11 +141,11 @@
                         .text(function(d) { return d.id; });
 
                     simulation
-                        .nodes(graph.nodes)
+                        .nodes(fdc.nodes)
                         .on("tick", ticked);
 
                     simulation.force("link")
-                        .links(graph.links);
+                        .links(fdc.links);
 
                     function ticked() {
                         link
@@ -159,8 +158,7 @@
                             .attr("transform", function(d) {
                             return "translate(" + d.x + "," + d.y + ")";
                             })
-                    }
-                    });
+                    };
                 
           },
            methods: {
