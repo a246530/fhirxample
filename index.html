@@ -109,7 +109,7 @@
                     if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].practitioner.push(practitioner.resource.id);
                     }else{
-                        fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[participantID] });
+                        fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[practitioner.resource.id] });
                     }
                 });
                 console.log(  
