@@ -86,14 +86,15 @@
                     let idExist=false;
                     let idExistsIndex=null;
                     for(let c=0;c<fdc.nodes.length;c++){
-                        if(Object.values(fdc.nodes[c]).indexOf(encounter.resource.type[0].text)>-1){
+                        if(fdc.nodes[c].id==encounter.resource.type[0].text){
+                            console.log("foundone");
                             ifExists=true;
                             idExistsIndex=c;
                             break;
                         }
                     }
                     if(idExist){
-                        fdc.nodes[idExistsIndex].push(encounter.resource.id);
+                        fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
                     }else{
                         fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id]});
                     }
