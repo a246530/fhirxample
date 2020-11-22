@@ -79,20 +79,17 @@
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
                     let rid=condition.resource.encounter.reference.replace("Encounter/", "");
-                    fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: [rid]});
+                    if(this.getResourceIDIndex(fdc,condition.resource.code.text)>-1){
+                        fdc.nodes[idExistsIndex].rid.push(rid);
+                    }else{
+                        fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: [rid]});
+                    }
+                    
+                    
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
-                    let idExist=false;
-                    let idExistsIndex=null;
-                    for(let c=0;c<fdc.nodes.length;c++){
-                        if(fdc.nodes[c].id==encounter.resource.type[0].text){
-                            idExist=true;
-                            idExistsIndex=c;
-                            break;
-                        }
-                    }
-                    if(idExist){
+                    if(this.getResourceIDIndex(fdc,encounter.resource.type[0].text)>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
                     }else{
                         fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id]});
@@ -149,15 +146,10 @@
                     .attr('x', 6)
                     .attr('y', 3);
 
-                node.append("title")
-                    .text(function(d) { return d.id; });
+                node.append("title").text(function(d) { return d.id; });
 
-                simulation
-                    .nodes(fdc.nodes)
-                    .on("tick", ticked);
-
-                simulation.force("link")
-                    .links(fdc.links);
+                simulation.nodes(fdc.nodes).on("tick", ticked);
+                simulation.force("link").links(fdc.links);
 
                 function ticked() {
                     link
@@ -195,8 +187,15 @@
                  //console.log(fhirResource);
                  return fhirResource;
              }
-             ,async onError() {
-                console.log("There was a problem");
+             ,getResourceIDIndex(fdc,searchText) {
+                let idExistsIndex=-1;
+                for(let c=0;c<fdc.nodes.length;c++){
+                    if(fdc.nodes[c].id==searchText){
+                        idExistsIndex=c;
+                        break;
+                    }
+                }
+                return idExistsIndex;
              }
            }
          }
