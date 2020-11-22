@@ -210,7 +210,7 @@
              ,async makeSmartRequestSmarter(smart,resource) {
                  let fhirResource = await smart.request("Encounter?patient="+smart.patient.id,{
                     pageLimit: 0,
-                    resolveReferences: [ "practitioner" ],
+                    resolveReferences: [ "participant" ],
                     graph: true // Set to true or omit to have the references mounted into the resource tree
                 });
                  //console.log(fhirResource);
