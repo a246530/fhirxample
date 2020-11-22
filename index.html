@@ -103,7 +103,7 @@
                 this.practitioners = await smart.request("Practitioner");// this.makeSmartRequest(smart,"Practitioner");  
                 console.log(this.practitioners);
                 this.practitioners.entry.forEach(practitioner=>{
-                    console.log(practitioner);
+                    console.log(practitioner.name);
                     let practitionerName=practitioner.name[0].family+','+practitioner.name[0].given[0];
                     let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
                     if(idExistsIndex>-1){
