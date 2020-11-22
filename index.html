@@ -100,7 +100,8 @@
                     }
                 });
 
-                this.practitioners = await this.makeSmartRequest(smart,"Practitioner");  
+                this.practitioners = await smart.request("Practitioner");// this.makeSmartRequest(smart,"Practitioner");  
+                console.log(this.practitioners);
                 this.practitioners.entry.forEach(practitioner=>{
                     let practitionerName=practitioner.name[0].family+','+practitioner.name[0].given;
                     let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
