@@ -78,20 +78,36 @@
                 this.conditions = await this.makeSmartRequest(smart,"Condition");
                 console.log(this.conditions);
                 this.conditions.entry.forEach(condition=>{
-                    console.log(condition.resource.encounter.reference.replace("Encounter/", "") );
                     let rid=condition.resource.encounter.reference.replace("Encounter/", "");
                     fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: rid});
                 });
                 this.encounters = await this.makeSmartRequest(smart,"Encounter");  
                 this.encounters.entry.forEach(encounter=>{
-                    fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: encounter.resource.id});
+                    let idExist=false;
+                    let idExistsIndex=null;
+                    for(let c=0;c<fdc.nodes.length;c++){
+                        if(Object.values(fdc.nodes[c].indexOf(encounter.resource.type[0].text)>-1)){
+                            ifExists=true;
+                            idExistsIndex=c;
+                            break;
+                        }
+                    }
+                    if(idExist){
+                        fdc.nodes[idExistsIndex].push(encounter.resource.id);
+                    }else{
+                        fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id]});
+                    }
                 });
+                console.log(fdc);
                 console.log(  
                     fdc.nodes.map((item,i)=>{
                        for(var c=0; c < fdc.nodes.length; c++) {
+                           for(var cc=0; c < fdc.nodes[c].rid.length;cc++){
                             if((item.rid === fdc.nodes[c].rid) && (item.group != fdc.nodes[c].group) ){
                                 fdc.links.push({source:item.id , target:fdc.nodes[c].id , value: 1})
                             }
+                           }
+                            
                      };
                   }));
                 console.log(fdc);
@@ -107,74 +123,72 @@
                     .force("charge", d3.forceManyBody())
                     .force("center", d3.forceCenter(width / 2, height / 2));
 
-                
+                var link = svg.append("g")
+                    .attr("class", "links")
+                    .selectAll("line")
+                    .data(fdc.links)
+                    .enter().append("line")
+                    .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
-                    var link = svg.append("g")
-                        .attr("class", "links")
-                        .selectAll("line")
-                        .data(fdc.links)
-                        .enter().append("line")
-                        .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+                var node = svg.append("g")
+                    .attr("class", "nodes")
+                    .selectAll("g")
+                    .data(fdc.nodes)
+                    .enter().append("g")
+                    
+                var circles = node.append("circle")
+                    .attr("r", 3)
+                    .attr("fill", function(d) { return color(d.group); })
+                    .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
 
-                    var node = svg.append("g")
-                        .attr("class", "nodes")
-                        .selectAll("g")
-                        .data(fdc.nodes)
-                        .enter().append("g")
-                        
-                    var circles = node.append("circle")
-                        .attr("r", 3)
-                        .attr("fill", function(d) { return color(d.group); })
-                        .call(d3.drag()
-                            .on("start", dragstarted)
-                            .on("drag", dragged)
-                            .on("end", dragended));
+                var lables = node.append("text")
+                    .text(function(d) {
+                        return d.id;
+                    })
+                    .attr('x', 6)
+                    .attr('y', 3);
 
-                    var lables = node.append("text")
-                        .text(function(d) {
-                            return d.id;
+                node.append("title")
+                    .text(function(d) { return d.id; });
+
+                simulation
+                    .nodes(fdc.nodes)
+                    .on("tick", ticked);
+
+                simulation.force("link")
+                    .links(fdc.links);
+
+                function ticked() {
+                    link
+                        .attr("x1", function(d) { return d.source.x; })
+                        .attr("y1", function(d) { return d.source.y; })
+                        .attr("x2", function(d) { return d.target.x; })
+                        .attr("y2", function(d) { return d.target.y; });
+
+                    node
+                        .attr("transform", function(d) {
+                        return "translate(" + d.x + "," + d.y + ")";
                         })
-                        .attr('x', 6)
-                        .attr('y', 3);
+                };
+                function dragstarted(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0.2).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
 
-                    node.append("title")
-                        .text(function(d) { return d.id; });
+                function dragged(d) {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                }
 
-                    simulation
-                        .nodes(fdc.nodes)
-                        .on("tick", ticked);
-
-                    simulation.force("link")
-                        .links(fdc.links);
-
-                    function ticked() {
-                        link
-                            .attr("x1", function(d) { return d.source.x; })
-                            .attr("y1", function(d) { return d.source.y; })
-                            .attr("x2", function(d) { return d.target.x; })
-                            .attr("y2", function(d) { return d.target.y; });
-
-                        node
-                            .attr("transform", function(d) {
-                            return "translate(" + d.x + "," + d.y + ")";
-                            })
-                    };
-                    function dragstarted(d) {
-                        if (!d3.event.active) simulation.alphaTarget(0.2).restart();
-                        d.fx = d.x;
-                        d.fy = d.y;
-                    }
-
-                    function dragged(d) {
-                        d.fx = d3.event.x;
-                        d.fy = d3.event.y;
-                    }
-
-                    function dragended(d) {
-                        if (!d3.event.active) simulation.alphaTarget(0);
-                        d.fx = null;
-                        d.fy = null;
-                    }
+                function dragended(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
                 
           },
            methods: {
