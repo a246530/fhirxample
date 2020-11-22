@@ -37,7 +37,7 @@
        </div>
      </div>
    </main>
-   <svg width="1260" height="800"></svg>
+   <svg width="1600" height="800"></svg>
     <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -123,7 +123,7 @@
                         .enter().append("g")
                         
                     var circles = node.append("circle")
-                        .attr("r", 5)
+                        .attr("r", 3)
                         .attr("fill", function(d) { return color(d.group); })
                         .call(d3.drag()
                             .on("start", dragstarted)
