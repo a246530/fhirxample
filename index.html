@@ -88,13 +88,14 @@
                     }
                 });
 
-                this.encounters = await this.makeSmartRequest(smart,"Encounter");  
+                this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter");  
                 console.log(await this.makeSmartRequestSmarter(smart,"Encounter")); 
                 this.encounters.entry.forEach(encounter=>{
                     let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
                     let participantID=[];
                     if(encounter.resource.participant){
                         participantID.push(encounter.resource.participant[0].individual.reference.replace("Practitioner/", ""));
+                        let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
                     }                    
                     if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
@@ -114,9 +115,6 @@
                         fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[practitioner.resource.id] });
                     }
                 });
-
-
-               
 
                 console.log(  
                     fdc.nodes.map((item,i)=>{
@@ -210,7 +208,7 @@
                  //console.log(fhirResource);
                  return fhirResource;
              }
-             ,async makeSmartRequestSmarter(smart,resource) {
+             ,async makeSmartRequestSmarter(smart,resource,resolveReferences) {
                  let fhirResource = await smart.request("Encounter?patient="+smart.patient.id,{
                     pageLimit: 0,
                     resolveReferences: [ "participant.0.individual","serviceProvider" ],
