@@ -91,12 +91,18 @@
                 this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter");  
                 console.log(await this.makeSmartRequestSmarter(smart,"Encounter")); 
                 this.encounters.entry.forEach(encounter=>{
-                    let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
                     let participantID=[];
                     if(encounter.resource.participant){
-                        participantID.push(encounter.resource.participant[0].individual.reference.replace("Practitioner/", ""));
-                        let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);
-                    }                    
+                        participantID.push(encounter.resource.participant[0].individual.id);
+                        let practitionerName=encounter.resource.participant[0].name[0].family+','+encounter.resource.participant[0].name[0].given[0];
+                        let idExistsIndex = this.getResourceIDIndex(practitionerName);
+                        if(idExistsIndex>-1){
+                            fdc.nodes[idExistsIndex].participantID.push(participantID[0]);
+                        }else{
+                            fdc.nodes.push({id : practitionerName , group : 3, rid: [], participantID:participantID });
+                        }
+                    }        
+                    let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);            
                     if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
                         fdc.nodes[idExistsIndex].participantID.push(participantID);
@@ -104,7 +110,7 @@
                         fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id], participantID:participantID });
                     }
                 });
-
+                /*
                 this.practitioners = await smart.request("Practitioner");  
                 this.practitioners.entry.forEach(practitioner=>{
                     let practitionerName=practitioner.resource.name[0].family+','+practitioner.resource.name[0].given[0];
@@ -115,7 +121,8 @@
                         fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[practitioner.resource.id] });
                     }
                 });
-
+                */
+                console.log(fdc);
                 console.log(  
                     fdc.nodes.map((item,i)=>{
                        for(var c=0; c < fdc.nodes.length; c++) {
@@ -215,7 +222,7 @@
                     graph: true // Set to true or omit to have the references mounted into the resource tree
                 });
                  //console.log(fhirResource);
-                 return fhirResource[0];
+                 return fhirResource;
              }
              ,getResourceIDIndex(fdc,searchText) {
                 let idExistsIndex=-1;
