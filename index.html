@@ -120,7 +120,6 @@
 
                 */
                 this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter",["participant.0.individual","serviceProvider"]);  
-                console.log(await this.makeSmartRequestSmarter(smart,"Encounter",["participant.0.individual","serviceProvider"])); 
                 this.encounters.entry.forEach(encounter=>{
                     let participantID=[];
                     if(encounter.resource.participant){
@@ -130,7 +129,8 @@
                         if(idExistsIndex<0){
                             fdc.nodes.push({id : practitionerName , group : 3, rid: [], participantID:participantID });
                         }
-                    }        
+                    }       
+                    console.log(encounter);
                     var x='resource.type[0].text'.split('.').reduce((o,i)=>o[i], encounter)
                     console.log(x);
                     let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);            
