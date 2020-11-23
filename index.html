@@ -215,7 +215,7 @@
                     graph: true // Set to true or omit to have the references mounted into the resource tree
                 });
                  //console.log(fhirResource);
-                 return fhirResource;
+                 return fhirResource[0];
              }
              ,getResourceIDIndex(fdc,searchText) {
                 let idExistsIndex=-1;
