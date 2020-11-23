@@ -109,7 +109,7 @@
                     let practitionerName=practitioner.resource.name[0].family+','+practitioner.resource.name[0].given[0];
                     let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
                     if(idExistsIndex>-1){
-                        fdc.nodes[idExistsIndex].practitioner.push(practitioner.resource.id);
+                        fdc.nodes[idExistsIndex].participantID.push(practitioner.resource.id);
                     }else{
                         fdc.nodes.push({id :practitionerName , group : 3, rid: [], participantID:[practitioner.resource.id] });
                     }
