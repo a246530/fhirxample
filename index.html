@@ -64,6 +64,13 @@
                 ,selectedPatient : null
                 ,loading: true
                 ,error: null
+                ,Group:
+                        [
+                            {group:1,groupname:"Conditions"}
+                            ,{group:2,groupname:"Encounters"}
+                            ,{group:3,groupname:"Participants"}
+                            
+                        ]
              }
            },
             async mounted() {
@@ -88,8 +95,32 @@
                     }
                 });
 
-                this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter");  
-                console.log(await this.makeSmartRequestSmarter(smart,"Encounter")); 
+                /*
+                    Group:
+                        [
+                            {
+                                group:
+                                groupname:
+                            }
+                        ]
+
+                    Resource:
+                        resourcename: //the FHIR resource type you want
+                        id: //path
+                        groupname: null //the lookup group name it belongs to 
+                        label: //path
+                        references:[
+                            {
+                                resourcename: 
+                                id: //path
+                                groupname: 
+                                label: //path
+                            }
+                        ] //
+
+                */
+                this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter",["participant.0.individual","serviceProvider"]);  
+                console.log(await this.makeSmartRequestSmarter(smart,"Encounter",["participant.0.individual","serviceProvider"])); 
                 this.encounters.entry.forEach(encounter=>{
                     let participantID=[];
                     if(encounter.resource.participant){
@@ -100,6 +131,9 @@
                             fdc.nodes.push({id : practitionerName , group : 3, rid: [], participantID:participantID });
                         }
                     }        
+                    var x = "encounter.resource.type[0].text";
+                    let sum = new Function(x)();
+                    console.log(sum);
                     let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);            
                     if(idExistsIndex>-1){
                         fdc.nodes[idExistsIndex].rid.push(encounter.resource.id);
@@ -107,6 +141,9 @@
                         fdc.nodes.push({id : encounter.resource.type[0].text , group : 2, rid: [encounter.resource.id], participantID:participantID });
                     }
                 });
+
+
+                
                 /*
                 this.practitioners = await smart.request("Practitioner");  
                 this.practitioners.entry.forEach(practitioner=>{
@@ -213,13 +250,13 @@
                  return fhirResource;
              }
              ,async makeSmartRequestSmarter(smart,resource,resolveReferences) {
-                 let fhirResource = await smart.request("Encounter?patient="+smart.patient.id,{
+                 let resourceQuery = resource+"?patient="+smart.patient.id;
+                 let fhirResource = await smart.request(resourceQuery,{
                     pageLimit: 0,
-                    resolveReferences: [ "participant.0.individual","serviceProvider" ],
+                    resolveReferences: resolveReferences,
                     graph: true // Set to true or omit to have the references mounted into the resource tree
                 });
-                 //console.log(fhirResource);
-                 return fhirResource[0];
+                 return fhirResource[0]; //smart.request returns array when refs are passed?
              }
              ,getResourceIDIndex(fdc,searchText) {
                 let idExistsIndex=-1;
