@@ -96,7 +96,7 @@
                         participantID.push(encounter.resource.participant[0].individual.id);
                         let practitionerName=encounter.resource.participant[0].individual.name[0].family+','+encounter.resource.participant[0].individual.name[0].given[0];
                         let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
-                        if(idExistsIndex=-1){
+                        if(idExistsIndex<0){
                             fdc.nodes.push({id : practitionerName , group : 3, rid: [], participantID:participantID });
                         }
                     }        
