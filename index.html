@@ -131,7 +131,7 @@
                             fdc.nodes.push({id : practitionerName , group : 3, rid: [], participantID:participantID });
                         }
                     }        
-                    var x='encounter.resource.type[0].text'.split('.').reduce((o,i)=>o[i], obj)
+                    var x='encounter.resource.type[0].text'.split('.').reduce((o,i)=>o[i], encounter)
                     console.log(x);
                     let idExistsIndex = this.getResourceIDIndex(fdc,encounter.resource.type[0].text);            
                     if(idExistsIndex>-1){
