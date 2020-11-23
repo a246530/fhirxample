@@ -95,7 +95,7 @@
                     if(encounter.resource.participant){
                         participantID.push(encounter.resource.participant[0].individual.id);
                         let practitionerName=encounter.resource.participant[0].individual.name[0].family+','+encounter.resource.participant[0].individual.name[0].given[0];
-                        let idExistsIndex = this.getResourceIDIndex(practitionerName);
+                        let idExistsIndex = this.getResourceIDIndex(fdc,practitionerName);
                         if(idExistsIndex>-1){
                             fdc.nodes[idExistsIndex].participantID.push(participantID[0]);
                         }else{
