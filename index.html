@@ -94,6 +94,7 @@
                         fdc.nodes.push({ id : condition.resource.code.text , group : 1, rid: [rid], participantID:[]});
                     }
                 });
+                console.log(this.conditions);
 
                 this.encounters = await this.makeSmartRequestSmarter(smart,"Encounter",["participant.0.individual","serviceProvider"]);  
                 this.encounters.entry.forEach(encounter=>{
